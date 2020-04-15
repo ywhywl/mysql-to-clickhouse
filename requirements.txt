@@ -1,0 +1,6 @@
+redis
+pymysql
+clickhouse_driver
+argparse
+toml
+mysql-replication

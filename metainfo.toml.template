@@ -1,0 +1,72 @@
+#任务唯一标识
+name='test'
+# 从这里同步数据
+[mysql_server]
+host='172.17.101.xx'
+port=3306
+user='xxxx'
+passwd='xxx'
+server_id=101
+init_executed_gtid_set='876bda42-13eb-11e9-ad28-fa1289b51a00:1-19054345,b375c42c-597d-11e7-9fbf-fac4efcfbe00:1-124762278'
+gtid_mode=0
+log_file='mysql-bin.000104'
+log_pos=4
+# redis配置信息，用于存放pos点
+[redis_server]
+host='172.17.1xxx'
+port=6379
+db=30
+passwd=''
+log_pos_prefix='log_pos_'
+
+# ch server信息，数据同步以后写入这里
+[clickhouse_server]
+host='172.17.101.120'
+port=9000
+passwd='xxx'
+user='xxxx'
+
+[filters]
+
+#only_tables: An array with the tables you want to watch (only works
+#ignored_tables: An array with the tables you want to skip
+#only_schemas: An array with the schemas you want to watch
+#ignored_schemas: An array with the schemas you want to skip
+
+# 需要同步的数据库，如果存在，则ignored_schemas不生效
+only_schemas =['xxx1','xxx2']
+# 需要同步的表,如果存在，则ignored_tables不生效
+only_tables=['pack_report_business_cost']
+#不需要同步的库,默认会加上mysql的系统库,如果only_schemas存在,则不生效,默认不同步'sys', 'mysql', 'information_schema', 'performance_schema'
+ignored_schemas=['beeper2_bi']
+#不需要同步的表,如果only_tables存在,则不生效
+ignored_tables=[]
+
+#tables=['tb12']
+
+[bulk_insert_control]
+#是否打开 1 是打开，0是关闭
+if_open=1
+#多少记录提交一次,使用pypy运行推荐2w记录提交。目前是预估值，采用的DML事件总数计算，不能保证每张表一次的批量插入数量，以后再看是否有优化的必要
+rows_to_target=10
+#选择每隔多少秒同步一次,负数表示不启用,单位秒
+interval=3
+
+# 告警邮件设置
+[failure_alarm]
+
+sender = 'xxx@xxx.com'
+mail_host="host"  #设置服务器
+mail_user="xxxxxx"    #用户名
+mail_pass="xxxxxx"   #口令
+mail_port=25  #设置服务器端口
+#报警收件人
+receivers = 'xxxxx@xxxxx.cn'
+#后面会这这里添加其他告警信息，比如钉钉
+
+#日志存放路径
+[log]
+# 可选级别: ['ERROR','WARN','INFO','DEBUG']
+log_path="relication_mysql_clickhouse.log"
+log_level='WARN'
+console_level='WARN'
